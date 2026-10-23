@@ -1,0 +1,48 @@
+image: python:3.12.13-slim
+
+stages: [check, test]
+
+variables:
+  UV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/uv"
+  UV_LINK_MODE: copy
+
+default:
+  before_script:
+    - python -m pip install --disable-pip-version-check uv==0.10.10
+    - uv sync --locked
+  cache:
+    key:
+      files: [uv.lock]
+    paths: [.cache/uv/]
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH'
+
+quality:
+  stage: check
+  script:
+    - uv run ruff check .
+    - uv run ruff format --check .
+    - uv run mypy
+
+sample-test:
+  stage: test
+  needs: []
+  script:
+    - uv run pytest tests/test_sample_app.py --junitxml=reports/sample.xml
+  artifacts:
+    when: always
+    expire_in: 45 days
+    reports:
+      junit: reports/sample.xml
+    paths: [reports/sample.xml]
+
+harness-test:
+  stage: test
+  needs: []
+  script:
+    - uv run pytest tests --ignore=tests/test_sample_app.py

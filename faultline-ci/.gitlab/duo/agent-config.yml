@@ -1,0 +1,11 @@
+# Native GitLab flow execution config; must be on the default branch to take effect.
+# Live execution has not yet been verified in the provisioned project.
+# Keep GitLab's default image so its sandbox runtime and Git tools are retained.
+setup_script:
+  - python3.12 -m pip install --disable-pip-version-check uv==0.10.10
+  - uv sync --locked
+network_policy:
+  allowed_domains:
+    - gitlab.com
+    - pypi.org
+    - files.pythonhosted.org
