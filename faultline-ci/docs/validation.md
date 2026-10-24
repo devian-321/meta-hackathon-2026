@@ -1,5 +1,15 @@
 # Local validation — October 23, 2026
 
+## October 24 repository-guard increment
+
+Ruff lint/format and strict mypy pass; **76 tests pass**. New tests cover a correct descendant
+repair, test/CI/verifier tampering despite correct pricing bytes, unrelated commits, altered
+function bodies, duplicate inventory entries, executable/symlink substitutions, blob identity,
+documented GitLab repository API parsing and opt-in CLI integration. API tests remain synthetic.
+No real GitLab pipeline or Duo execution has yet been observed.
+
+## October 23 foundation review
+
 Environment: macOS ARM64, Python 3.12.13, uv 0.10.10, pytest 8.4.2.
 
 Commands executed from the deliverable folder:

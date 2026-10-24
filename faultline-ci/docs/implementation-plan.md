@@ -38,7 +38,8 @@ repair boundaries. No local process executes agent proposals or untrusted log co
 
 - No real GitLab/Duo execution or public demo recorded.
 - Test-report pagination above one page is rejected; job lists are paginated with a bound.
-- No ancestry, patch-diff, scenario linkage or Duo provenance verification yet.
+- An optional `--check-repair` guard now verifies ancestry, repository scope and pinned
+  pricing fixtures. Duo provenance and approval remain manual evidence gates.
 - Sample job matching currently assumes the exact `sample-test` job name.
 - No automatic repair retry, webhook handler, hosted UI or cloud deployment.
 - API tests use synthetic httpx transports; they cannot establish live compatibility.
@@ -49,4 +50,5 @@ The fault exporter tests now use independent fixtures, so a deliberately broken 
 not create an unrelated harness failure. API payloads and evidence links are validated
 before use; job pagination handles missing headers. Reports publish into new directories
 and explicitly mark scenario linkage, ancestry, Duo provenance, approval and patch safety
-as unchecked. Local validation and fresh-directory results are in `validation.md`.
+as unchecked unless the repository guard is requested. Local validation and fresh-directory
+results are in `validation.md`.

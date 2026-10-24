@@ -7,6 +7,8 @@ SCENARIO_ID = "pricing-discount-sign-v1"
 TARGET = Path("sample_app/pricing.py")
 GOOD = "return subtotal * (100 - discount_percent) // 100"
 BROKEN = "return subtotal * (100 + discount_percent) // 100"
+BASELINE_SHA256 = "433a218a278d1454da443b423bb7e4da1a13e6ea7ee0e43851bdd415f7072a78"
+FAULT_SHA256 = "f8d71a0e1e960f0f36699154113274c27a69b76ff4b88caa6b5f0956634afb73"
 
 
 class ScenarioError(ValueError):

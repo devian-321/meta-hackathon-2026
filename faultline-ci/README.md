@@ -46,7 +46,7 @@ assertions while the original checkout remains green. This is local simulation o
 Once actual before/after pipelines exist:
 
 ```sh
-uv run faultline verify --project NAMESPACE/PROJECT --before FAILED_PIPELINE_ID --after REPAIRED_PIPELINE_ID --expected-sha FULL_REPAIR_COMMIT_SHA --output reports/incident-001
+uv run faultline verify --project NAMESPACE/PROJECT --before FAILED_PIPELINE_ID --after REPAIRED_PIPELINE_ID --expected-sha FULL_REPAIR_COMMIT_SHA --check-repair --output reports/incident-001
 ```
 
 Arguments above are placeholders, not real evidence. Set `GITLAB_TOKEN` in your environment
@@ -56,14 +56,17 @@ Exit status: 0 for passing outcome checks, 1 for failed checks, 2 for unavailabl
 
 JSON and Markdown reports contain pipeline links, commit IDs and test outcomes. They do
 not export raw job logs or authorization headers. Review artifacts before publication.
-`PASS` is an outcome check: Duo session provenance, approval, patch scope and commit ancestry
-are separate checks and currently require manual review. This tool is not yet a complete
-causal verifier or an agent execution service.
+With `--check-repair`, PASS also requires commit ancestry, unchanged repository objects
+outside the pricing correction, and byte-for-byte agreement with the pinned broken and
+healthy fixtures. The guard reads complete paginated inventories and validates raw blobs
+against Git object IDs. It does not depend on potentially truncated textual diffs.
+Without this flag, verification checks only pipeline/test outcomes. Duo session provenance
+and approval still require separate review. This is not a general-purpose patch auditor.
 
 Every report uses a new directory. An explicit `--output` directory must not exist; omit
 the option to generate a unique directory under `reports/`. Existing evidence is never
 overwritten, and both report files are staged before publication. The JSON distinguishes
-the declared scenario from its unverified link to the remote pipeline.
+the declared scenario from its checked or unchecked link to the remote pipeline.
 
 ## GitLab setup and delivery
 

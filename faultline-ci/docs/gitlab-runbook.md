@@ -37,7 +37,9 @@ decision, timestamp and exact proposed commit/diff. Approve/apply the valid sugg
 Never merge the intentionally broken branch into main to manufacture a red baseline.
 
 Observe the new real pipeline and expected full SHA. Collect API evidence using the README
-command. Also record the session/approval/MR links in the final incident manifest; these
+command with `--check-repair`. It requires the broken commit to be an ancestor of the repair,
+only the pricing correction to change, and the exact pinned scenario bytes to be restored.
+Also record the session/approval/MR links in the final incident manifest; these
 are currently a manual companion to the outcome report.
 
 ## Local isolated fault check

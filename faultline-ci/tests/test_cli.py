@@ -1,10 +1,13 @@
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import httpx
 import pytest
 
 from faultline_ci.cli import main
+from faultline_ci.gitlab_client import GitLabClient
+from faultline_ci.repair import Entry, RepairEvidence
 
 
 @pytest.fixture
@@ -162,3 +165,38 @@ def test_invalid_arguments_fail_before_any_api_request(
         main(command)
     assert raised.value.code == 2
     assert not api
+
+
+def test_repository_guard_is_included_when_requested(
+    api: list[httpx.Request],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    repair_evidence: RepairEvidence,
+) -> None:
+    monkeypatch.setattr(GitLabClient, "repair", lambda *args: repair_evidence)
+    output = tmp_path / "incident"
+    assert main(arguments(output) + ["--check-repair"]) == 0
+    report = json.loads((output / "recovery.json").read_text())
+    assert report["commit_ancestry"] == "passed"
+    assert report["scenario_linkage"] == "passed"
+    assert report["repair_verification"]["passed"]
+    assert report["approval"] == report["duo_provenance"] == "not_checked"
+
+
+def test_green_tests_with_tampered_code_cannot_pass_repository_guard(
+    api: list[httpx.Request],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    repair_evidence: RepairEvidence,
+) -> None:
+    tampered = replace(
+        repair_evidence,
+        after_tree=repair_evidence.after_tree
+        + (Entry(".gitlab-ci.yml", "f" * 40, "100644", "blob"),),
+    )
+    monkeypatch.setattr(GitLabClient, "repair", lambda *args: tampered)
+    output = tmp_path / "incident"
+    assert main(arguments(output) + ["--check-repair"]) == 1
+    report = json.loads((output / "recovery.json").read_text())
+    assert report["outcome_verification"]["passed"]
+    assert not report["verification"]["passed"]

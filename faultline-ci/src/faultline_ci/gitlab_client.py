@@ -1,11 +1,14 @@
 """Read-only GitLab API adapter. No repair execution and no raw log export."""
 
+from pathlib import PurePosixPath
 from re import fullmatch
 from typing import Any, cast
 from urllib.parse import quote, urlsplit
 
 import httpx
 
+from faultline_ci.repair import Entry, RepairEvidence, content_hash
+from faultline_ci.scenarios import TARGET
 from faultline_ci.verifier import Pipeline, TestCase
 
 
@@ -44,7 +47,7 @@ class GitLabClient:
         self.client = client
         self.project = quote(project, safe="")
 
-    def _get(self, path: str, **params: str | int) -> httpx.Response:
+    def _get(self, path: str, **params: str | int | list[str]) -> httpx.Response:
         try:
             response = self.client.get(path, params=params)
             response.raise_for_status()
@@ -64,10 +67,10 @@ class GitLabClient:
         except ValueError:
             raise EvidenceError("GitLab returned invalid JSON evidence") from None
 
-    def _pages(self, path: str) -> list[dict[str, Any]]:
+    def _pages(self, path: str, **params: str | int) -> list[dict[str, Any]]:
         items: list[dict[str, Any]] = []
         for page in range(1, 101):
-            response = self._get(path, per_page=100, page=page)
+            response = self._get(path, per_page=100, page=page, **params)
             payload = _objects(self._json(response))
             items.extend(payload)
             next_page = response.headers.get("x-next-page")
@@ -127,6 +130,69 @@ class GitLabClient:
             tests=tuple(tests),
             test_job_statuses=tuple(sample_statuses),
         )
+
+    def repair(self, before: Pipeline, after: Pipeline) -> RepairEvidence:
+        """Read complete inventories and pinned blobs, avoiding truncated diff APIs."""
+        if before.project_id != after.project_id:
+            raise EvidenceError("Repair evidence requires pipelines from the same project")
+        path = f"projects/{before.project_id}/repository"
+        common = _object(
+            self._json(
+                self._get(
+                    f"{path}/merge_base",
+                    **{"refs[]": [before.sha, after.sha]},
+                )
+            )
+        )
+        merge_base = _text(common.get("id"))
+        if not fullmatch(r"[0-9a-f]{40}", merge_base):
+            raise EvidenceError("GitLab returned an invalid merge-base SHA")
+        before_tree = self._tree(path, before.sha)
+        after_tree = self._tree(path, after.sha)
+        return RepairEvidence(
+            before_sha=before.sha,
+            after_sha=after.sha,
+            merge_base_sha=merge_base,
+            before_tree=before_tree,
+            after_tree=after_tree,
+            before_content_sha256=self._target_hash(path, before_tree),
+            after_content_sha256=self._target_hash(path, after_tree),
+        )
+
+    def _tree(self, path: str, sha: str) -> tuple[Entry, ...]:
+        items = self._pages(f"{path}/tree", ref=sha, recursive="true")
+        entries: list[Entry] = []
+        for item in items:
+            name = _text(item.get("path"))
+            if PurePosixPath(name).is_absolute() or any(
+                part in {"", ".", ".."} for part in name.split("/")
+            ):
+                raise EvidenceError("GitLab returned an invalid repository path")
+            object_id = _text(item.get("id"))
+            if not fullmatch(r"[0-9a-f]{40}", object_id):
+                raise EvidenceError("GitLab returned an invalid repository object ID")
+            entries.append(
+                Entry(
+                    path=name,
+                    object_id=object_id,
+                    mode=_text(item.get("mode")),
+                    kind=_text(item.get("type")),
+                )
+            )
+        return tuple(entries)
+
+    def _target_hash(self, path: str, tree: tuple[Entry, ...]) -> str:
+        targets = [entry for entry in tree if entry.path == TARGET.as_posix()]
+        if len(targets) != 1 or targets[0].kind != "blob":
+            raise EvidenceError("Pricing fixture is missing or ambiguous in repository evidence")
+        object_id = targets[0].object_id
+        content = self._get(f"{path}/blobs/{object_id}/raw").content
+        if len(content) > 65536:
+            raise EvidenceError("Pricing fixture exceeds the evidence size limit")
+        try:
+            return content_hash(content, object_id)
+        except ValueError:
+            raise EvidenceError("Repository blob bytes do not match their object ID") from None
 
     def _validate_url(self, url: str, pipeline_id: int) -> None:
         try:
