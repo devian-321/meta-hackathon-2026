@@ -41,7 +41,8 @@ repair boundaries. No local process executes agent proposals or untrusted log co
 - An optional `--check-repair` guard now verifies ancestry, repository scope and pinned
   pricing fixtures. Duo provenance and approval remain manual evidence gates.
 - Sample job matching currently assumes the exact `sample-test` job name.
-- No automatic repair retry, webhook handler, hosted UI or cloud deployment.
+- No automatic repair retry, webhook handler, hosted UI or cloud deployment. A static HTML
+  evidence report and real local scripted rehearsal are available via `faultline local-demo`.
 - API tests use synthetic httpx transports; they cannot establish live compatibility.
 
 ## Review corrections

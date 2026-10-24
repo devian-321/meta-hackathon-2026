@@ -11,6 +11,7 @@ from uuid import uuid4
 import httpx
 
 from faultline_ci.gitlab_client import EvidenceError, GitLabClient
+from faultline_ci.local_demo import run_local_demo
 from faultline_ci.repair import verify_repair
 from faultline_ci.reports import write_report
 from faultline_ci.scenarios import SCENARIO_ID, ScenarioError, export_fault
@@ -23,6 +24,11 @@ def main(argv: list[str] | None = None) -> int:
     export = commands.add_parser("export-fault", help="Export a broken local demo copy")
     export.add_argument("--source", type=Path, default=Path.cwd())
     export.add_argument("--destination", type=Path, required=True)
+    demo = commands.add_parser(
+        "local-demo", help="Run real local tests with a scripted repair; no Duo"
+    )
+    demo.add_argument("--source", type=Path, default=Path.cwd())
+    demo.add_argument("--output", type=Path, default=Path("reports/local-demo"))
     verify = commands.add_parser("verify", help="Read actual evidence from GitLab.com")
     verify.add_argument("--project", required=True, help="GitLab namespace/project or project ID")
     verify.add_argument("--before", type=int, required=True)
@@ -36,6 +42,16 @@ def main(argv: list[str] | None = None) -> int:
     verify.add_argument("--output", type=Path, help="New run directory; never overwritten")
     args = parser.parse_args(argv)
     try:
+        if args.command == "local-demo":
+            if args.output.exists() or args.output.is_symlink():
+                raise EvidenceError("Report destination already exists; choose a new run directory")
+            demo_report, demo_markdown, artifacts = run_local_demo(args.source)
+            write_report(args.output, demo_report, demo_markdown, artifacts)
+            print(
+                "Local rehearsal passed. Scripted repair; no Duo run. "
+                f"Open {args.output / 'recovery.html'}"
+            )
+            return 0
         if args.command == "export-fault":
             export_fault(args.source, args.destination)
             print(f"Exported {SCENARIO_ID} to {args.destination}; source checkout unchanged")

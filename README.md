@@ -13,6 +13,7 @@ unchanged. The canonical GitLab submission will use the contributor-provisioned 
 - [Demo recording script](faultline-ci/demo/script.md)
 - [Original owner handoff](CODEX_HANDOFF_FAULTLINE.md)
 
-The local baseline has passing checks and a reproducible failure fixture. Hosted GitLab
+The local baseline has passing checks, a viewable scripted rehearsal with real Git/pytest
+evidence, and a guard against false-green repairs. Hosted GitLab
 pipelines, Duo execution, a published demo and a video remain pending. Lexsi implementation
 follows the GitLab sprint; Meta remains conditional on acceptance and final rules.

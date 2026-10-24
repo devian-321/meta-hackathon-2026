@@ -6,11 +6,12 @@ Updated October 24, 2026. All hosted evidence fields remain empty until observed
 | --- | --- | --- |
 | Small invoice app and deterministic regression | Implemented locally | `sample_app/`, scenario exporter |
 | Outcome checker and read-only GitLab adapter | Implemented locally | `src/faultline_ci/` |
-| Local checks | Passed | 76 tests; Ruff lint/format; strict mypy |
+| Local checks | Passed | 81 tests; Ruff lint/format; strict mypy |
 | Commit ancestry, repair scope, scenario guard | Implemented; tested synthetically | `repair.py`, GitLab tree/blob/merge-base adapter; `--check-repair` |
 | Isolated regression smoke test | Passed locally | 3 expected failures, 5 passes; original app unchanged |
 | Fresh-directory setup and faulted checkout | Passed locally | Separate environment; harness remains green after pricing fault |
 | Report integrity | Passed locally | Existing reports preserved; partial file writes do not publish PASS |
+| Viewable local rehearsal | Implemented and executed | `faultline local-demo`; actual Git/pytest, scripted repair, false-green rejection, HTML report and Git bundle |
 | GitLab pipeline configuration | Written; hosted execution pending | `.gitlab-ci.yml` |
 | Native execution setup and repair instructions | Written; hosted execution pending | `.gitlab/duo/agent-config.yml`, `AGENTS.md` |
 | Native Duo execution | Access unconfirmed | No session observed |

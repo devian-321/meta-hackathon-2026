@@ -26,6 +26,30 @@ For fish, use `set -gx UV_CACHE_DIR "$PWD/.cache/uv"` in place of `export`.
 The absolute cache path remains valid when changing directories. The committed lockfile
 is the dependency source of truth.
 
+## Run the viewable local demo
+
+From this folder after setup:
+
+```sh
+uv run faultline local-demo --output reports/local-demo
+```
+
+Open `reports/local-demo/recovery.html` in your browser. The command creates a disposable
+Git repository using your configured personal identity and runs actual pytest subprocesses:
+
+| Stage | Expected result |
+| --- | --- |
+| Healthy baseline | 8 passing tests |
+| Injected pricing fault | 5 passing, 3 failing tests |
+| Scripted fixture restoration | 8 passing; repository guard accepts correction |
+| Disabled pricing assertions | 8 passing; repository guard rejects false green |
+
+This is a **scripted local rehearsal**, with no model invocation or hosted GitLab pipeline.
+Your working branch and app remain unchanged. Output includes HTML, JSON, Markdown, JUnit
+files and a cloneable `demo.bundle` preserving the actual local history. Existing report
+directories are never overwritten; use another output name for the next run.
+The local demo requires Git and your configured Git name/email; no remote or token is used.
+
 ## Reproduce the fault locally
 
 Choose a new temporary path outside this checkout:
@@ -54,7 +78,7 @@ if required for API access; use `read_api`, never a token embedded in the comman
 The client reads GitLab.com over HTTPS, does not follow redirects and does not write to GitLab.
 Exit status: 0 for passing outcome checks, 1 for failed checks, 2 for unavailable evidence.
 
-JSON and Markdown reports contain pipeline links, commit IDs and test outcomes. They do
+HTML, JSON and Markdown reports contain pipeline links, commit IDs and test outcomes. They do
 not export raw job logs or authorization headers. Review artifacts before publication.
 With `--check-repair`, PASS also requires commit ancestry, unchanged repository objects
 outside the pricing correction, and byte-for-byte agreement with the pinned broken and
@@ -65,7 +89,7 @@ and approval still require separate review. This is not a general-purpose patch 
 
 Every report uses a new directory. An explicit `--output` directory must not exist; omit
 the option to generate a unique directory under `reports/`. Existing evidence is never
-overwritten, and both report files are staged before publication. The JSON distinguishes
+overwritten, and all bundle files are staged before publication. The JSON distinguishes
 the declared scenario from its checked or unchecked link to the remote pipeline.
 
 ## GitLab setup and delivery

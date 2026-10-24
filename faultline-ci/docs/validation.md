@@ -2,11 +2,23 @@
 
 ## October 24 repository-guard increment
 
-Ruff lint/format and strict mypy pass; **76 tests pass**. New tests cover a correct descendant
+Ruff lint/format and strict mypy pass; **81 tests pass**. New tests cover a correct descendant
 repair, test/CI/verifier tampering despite correct pricing bytes, unrelated commits, altered
 function bodies, duplicate inventory entries, executable/symlink substitutions, blob identity,
 documented GitLab repository API parsing and opt-in CLI integration. API tests remain synthetic.
 No real GitLab pipeline or Duo execution has yet been observed.
+
+The `local-demo` command runs four real pytest subprocesses and creates real local Git
+history: healthy 8/8; fault 5/8; scripted repair 8/8; dishonest assertion removal 8/8, rejected
+by the guard. Integration tests clone the generated Git bundle and confirm repair/tampering
+branches are preserved. HTML escaping, incomplete-status display, artifact path boundaries,
+and safe subprocess timeouts are covered. The rehearsal disables Python bytecode writes so
+rapid same-size source edits cannot reuse timestamp-based cached baseline code.
+The CI harness job explicitly installs Git because the slim Python base image does not
+provide the full local-rehearsal toolchain. Hosted execution remains to be verified.
+
+HTML reports are generated and structurally exercised by tests; a browser screenshot has
+not been captured. These are local observations, not native GitLab evidence.
 
 ## October 23 foundation review
 

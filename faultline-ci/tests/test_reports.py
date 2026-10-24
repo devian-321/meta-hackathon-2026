@@ -28,3 +28,10 @@ def test_partial_write_cannot_publish_pass(
 def test_existing_report_directory_is_not_replaced(tmp_path: Path) -> None:
     with pytest.raises(EvidenceError, match="already exists"):
         write_report(tmp_path, {}, "PASS")
+
+
+def test_artifact_paths_cannot_escape_report_directory(tmp_path: Path) -> None:
+    with pytest.raises(EvidenceError, match="artifact name"):
+        write_report(tmp_path / "run", {}, "", {"../outside": b"bad"})
+    assert not (tmp_path / "outside").exists()
+    assert not (tmp_path / "run").exists()
