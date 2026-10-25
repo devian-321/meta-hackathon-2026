@@ -12,3 +12,6 @@
   virtualenvs, secrets and temporary reports out of commits.
 - Preserve the hackathon submission freeze once submitted; continue development in the
   designated separate copy during judging.
+- Keep GitLab checkouts, configuration and credential files inside this workspace. Use
+  repository-local Git settings and ignored `.local/` or `.workspaces/` directories.
+  Do not modify global Git configuration, SSH configuration or system keychain settings.

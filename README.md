@@ -7,6 +7,7 @@ unchanged. The canonical GitLab submission will use the contributor-provisioned 
 - [Research and three-event delivery plan](docs/HACKATHON_PLAN.md)
 - [FaultLine CI implementation and setup](faultline-ci/README.md)
 - [GitLab integration runbook](faultline-ci/docs/gitlab-runbook.md)
+- [Workspace-local GitLab authentication setup](docs/GITLAB_SETUP.md)
 - [Local validation results](faultline-ci/docs/validation.md)
 - [Review findings and corrections](docs/REVIEW_2026-10-23.md)
 - [Submission evidence ledger](faultline-ci/docs/submission-notes.md)
