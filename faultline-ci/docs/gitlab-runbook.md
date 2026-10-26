@@ -7,10 +7,11 @@ Confirm the provisioned project URL and Developer + AI role. Verify runner avail
 credits, foundational flows, and Fix CI/CD Pipeline enabled in the top-level group.
 Refer to [the official repair guide](https://docs.gitlab.com/ci/pipelines/fix_pipeline/).
 
-The current working folder is staged inside a Meta GitHub repository. Transfer this folder's
-contents into the provisioned GitLab project's checkout. Inspect its README/default branch
-first; preserve provisioning assets. Set a confirmed personal identity locally before
-creating commits. Do not change global settings or use the work email inadvertently.
+Canonical project: `https://gitlab.com/student-group4903843/fault-cli`.
+The outer planning workspace retains a separate GitHub remote. Its GitLab checkout lives
+under `.workspaces/fault-cli/`, with the application's contents at the checkout root.
+The original starter commit is preserved. Use the confirmed personal identity locally;
+do not change global settings or use the work email inadvertently.
 
 ## Baseline and incident
 

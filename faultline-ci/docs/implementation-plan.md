@@ -14,7 +14,7 @@ Path A; provisionally Assisted. Match final category to actual approval behavior
 
 Cut order if behind: cloud deployment, dashboard, second scenario. Preserve the real Duo
 execution and independent tests. Detailed three-event research and decisions are in the
-outer workspace's `docs/HACKATHON_PLAN.md`; this file travels with the GitLab deliverable.
+planning workspace's `docs/HACKATHON_PLAN.md`; this file is self-contained for the GitLab deliverable.
 
 ## Architecture
 

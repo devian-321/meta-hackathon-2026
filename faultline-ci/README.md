@@ -2,8 +2,10 @@
 
 Reproduce a CI regression, review a GitLab Duo repair, and independently check the outcome.
 
-**Status:** initial local implementation. Native Duo execution and hosted GitLab pipelines
-have not yet been demonstrated. No public project/demo/video URL exists in this checkout.
+**Repository:** [student-group4903843/fault-cli](https://gitlab.com/student-group4903843/fault-cli).
+
+**Status:** tested application baseline. Native Duo execution and hosted GitLab pipeline
+outcomes are not yet verified. The local rehearsal is scripted; no final video is published.
 
 The sample application calculates discounted invoice totals in integer cents. A controlled
 fault reverses the discount sign. The verifier reads GitLab pipeline/job/test evidence and
@@ -94,8 +96,11 @@ the declared scenario from its checked or unchecked link to the remote pipeline.
 
 ## GitLab setup and delivery
 
-Copy the **contents of this folder** to the canonical public GitLab project root so the
-MIT license and `.gitlab-ci.yml` are detected. Do not push the outer Meta planning workspace.
+The canonical GitLab repository contains the application, MIT license, and CI configuration
+at its root. When working from the outer planning workspace, the source is in `faultline-ci/`
+and the separate GitLab checkout is in `.workspaces/fault-cli/`; credentials stay outside
+the submission in ignored workspace storage. Public visibility and native Duo availability
+must be checked in the real project before submission.
 Follow [the GitLab runbook](docs/gitlab-runbook.md), [implementation plan](docs/implementation-plan.md),
 [current evidence ledger](docs/submission-notes.md) and [demo script](demo/script.md).
 

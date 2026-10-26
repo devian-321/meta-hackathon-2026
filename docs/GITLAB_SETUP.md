@@ -1,16 +1,25 @@
 # GitLab setup confined to this workspace
 
 Target: `https://gitlab.com/student-group4903843/fault-cli`.
-The unauthenticated Git check required credentials. This does not establish whether
-the project is private, membership is missing, or the URL needs correction.
+Authenticated Git access is working. The application and draft fault MR have been pushed.
+The supplied fine-grained token permits Git/repository/MR operations but denies project
+metadata, pipeline and job reads. See [the live status](GITLAB_LIVE_STATUS.md).
 
 ## One-time owner action
 
-Create a short-lived GitLab personal access token with **read_api** and
-**write_repository** scopes. These cover evidence reads and Git pushes; API writes are
+For a legacy token, explicitly choose **Generate token → Legacy token**, then select
+**read_api** and **write_repository**. These cover evidence reads and Git pushes; API writes are
 not required for the initial workflow. Use a project-limited token if your account offers
 one with those capabilities. Keep the token out of chat, shell arguments and Git URLs.
 [GitLab token documentation](https://docs.gitlab.com/user/profile/personal_access_tokens/)
+
+For a fine-grained token restricted to this project, the workflow needs **Code: Download
+and Push**, **Repository: Read**, **Merge Request: Read**, **Project: Read**, **Pipeline:
+Read**, and **Job: Read**. Git permissions and API permissions are separate: a successful
+push does not prove that CI evidence can be read. CI Config: Validate is useful for server
+linting but is not required by the recovery verifier.
+[Git permissions](https://docs.gitlab.com/auth/tokens/fine_grained_access_tokens_other/),
+[REST permissions](https://docs.gitlab.com/auth/tokens/fine_grained_access_tokens_rest/).
 
 From this workspace's root, run in your own terminal:
 
@@ -18,8 +27,10 @@ From this workspace's root, run in your own terminal:
 python3 scripts/gitlab_workspace.py setup
 ```
 
-Paste the token at the hidden prompt. The script checks the exact project through the
-GitLab API, saves the token with mode 0600, configures the checkout and fetches its contents.
+Paste the token at the hidden prompt. The script checks project metadata when permitted,
+saves the token with mode 0600, configures the checkout and fetches the exact repository.
+A metadata-only 403 no longer blocks an otherwise permitted Git fetch; it is reported
+separately. The default branch can be discovered through Git when metadata access is denied.
 It never puts a token in a remote URL. No global Git config, SSH config, or system keychain
 settings are changed.
 
@@ -53,12 +64,13 @@ does not establish event provisioning, credits, runners, or foundational-flow av
 
 ## Local verification — October 26
 
-The setup script passes Ruff and strict mypy. Fourteen setup tests cover private file
+The setup script passes Ruff and strict mypy. Sixteen setup tests cover private file
 permissions, token rotation, exact host/project binding, ignored store/erase requests,
 symlink refusal, redirect refusal, repository-local configuration, interrupted fetches
-and preservation of existing owner files. Combined with the application suite, 95 tests
+preservation of existing owner files, Git-only access when metadata scope is missing,
+and default-branch discovery without metadata. Combined with the application suite, 97 tests
 pass. Python 3.9 successfully runs the script's help command.
 
 A source-only export is prepared under `.local/gitlab/faultline-ci-source.tar`, with its
-commit and SHA256 in `source-manifest.json`. No credentials are included. No live token,
-authenticated checkout, GitLab push or pipeline has been observed yet.
+commit and SHA256 in `source-manifest.json`. No credentials are included. Live GitLab
+commits, the MR and failed pipeline summaries are recorded in `GITLAB_LIVE_STATUS.md`.

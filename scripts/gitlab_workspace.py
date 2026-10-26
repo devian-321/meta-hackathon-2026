@@ -30,6 +30,10 @@ class SetupError(RuntimeError):
     """An actionable error safe to display without credential material."""
 
 
+class ProjectReadDenied(SetupError):
+    """A token may permit Git while lacking project-metadata API access."""
+
+
 class NoRedirects(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args: Any, **kwargs: Any) -> None:
         return None
@@ -87,6 +91,10 @@ def project_details(token: str) -> dict[str, Any]:
         with opener.open(request, timeout=25) as response:
             data = json.load(response)
     except urllib.error.HTTPError as error:
+        if error.code == 403:
+            raise ProjectReadDenied(
+                "Project metadata API denied; fine-grained tokens need Project: Read"
+            ) from None
         raise SetupError(
             f"GitLab returned HTTP {error.code}; check project membership and read_api scope"
         ) from None
@@ -153,6 +161,11 @@ def configure_checkout(details: dict[str, Any]) -> Path:
     _git(checkout, "config", "--local", "--add", "credential.helper", helper)
     _git(checkout, "fetch", "origin")
     default = details.get("default_branch")
+    if not isinstance(default, str) or not default:
+        for line in _git(checkout, "ls-remote", "--symref", "origin", "HEAD").splitlines():
+            if line.startswith("ref: refs/heads/") and line.endswith("\tHEAD"):
+                default = line.split("\t", 1)[0].removeprefix("ref: refs/heads/")
+                break
     local_branches = _git(checkout, "for-each-ref", "--format=%(refname)", "refs/heads")
     has_owner_files = any(path.name != ".git" for path in checkout.iterdir())
     empty_retry = not local_branches and not has_owner_files
@@ -189,14 +202,23 @@ def main() -> int:
                 raise SetupError(
                     "Run setup in your own interactive terminal; do not paste a token in chat"
                 )
-            token = getpass.getpass("GitLab token (hidden; read_api + write_repository): ").strip()
+            token = getpass.getpass("GitLab token (hidden; repository access required): ").strip()
             if not token or any(character.isspace() for character in token):
                 raise SetupError("Empty or malformed token; nothing was saved")
-            details = project_details(token)
+            metadata_error = None
+            try:
+                details = project_details(token)
+            except ProjectReadDenied as error:
+                # Git read/write and metadata read are separate fine-grained grants.
+                # Do not block a legitimate Git checkout on an unrelated API grant.
+                metadata_error = str(error)
+                details = {"path_with_namespace": PROJECT}
             store_token(token)
             checkout = configure_checkout(details)
             print(f"Authenticated checkout ready: {checkout}")
             print("Only workspace credential files and checkout-local Git settings were changed.")
+            if metadata_error:
+                print(metadata_error)
         else:
             details = project_details(read_token())
         print(
@@ -220,10 +242,9 @@ def main() -> int:
             )
         )
         return 0
-    except (SetupError, OSError):
+    except (SetupError, OSError) as failure:
         # OSError paths and exception bodies are intentionally not printed.
-        error = sys.exc_info()[1]
-        message = str(error) if isinstance(error, SetupError) else "Local file operation failed"
+        message = str(failure) if isinstance(failure, SetupError) else "Local file operation failed"
         parser.exit(2, f"Setup incomplete: {message}\n")
 
 

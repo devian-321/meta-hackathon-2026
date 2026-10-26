@@ -169,3 +169,56 @@ def test_interrupted_fetch_can_resume_without_replacing_owner_files(
     assert switched is not has_owner_files
     if has_owner_files:
         assert (checkout / "keep.txt").read_text() == "owner work"
+
+
+def test_setup_can_fetch_git_when_metadata_scope_is_missing(
+    workspace: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    class Terminal(io.StringIO):
+        def isatty(self) -> bool:
+            return True
+
+    def denied(token: str) -> None:
+        raise module.ProjectReadDenied("Project metadata API denied")
+
+    monkeypatch.setattr(module.sys, "argv", [str(SCRIPT), "setup"])
+    monkeypatch.setattr(module.sys, "stdin", Terminal())
+    monkeypatch.setattr(module.getpass, "getpass", lambda prompt: "fixture-token")
+    monkeypatch.setattr(module, "project_details", denied)
+    calls = []
+
+    def configure(details: dict) -> Path:
+        calls.append(details)
+        return workspace / ".workspaces/fault-cli"
+
+    monkeypatch.setattr(module, "configure_checkout", configure)
+    assert module.main() == 0
+    assert calls == [{"path_with_namespace": module.PROJECT}]
+    assert module.read_token() == "fixture-token"
+    output = capsys.readouterr().out
+    assert "Authenticated checkout ready" in output
+    assert "Project metadata API denied" in output
+    assert "fixture-token" not in output
+
+
+def test_default_branch_is_discovered_through_git_without_metadata(
+    workspace: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls = []
+
+    def git(directory: Path, *arguments: str) -> str:
+        calls.append(arguments)
+        if arguments == ("config", "--local", "user.name"):
+            return "Owner Fixture"
+        if arguments == ("config", "--local", "user.email"):
+            return "fixture@example.invalid"
+        if arguments == ("ls-remote", "--symref", "origin", "HEAD"):
+            return "ref: refs/heads/trunk\tHEAD\n" + "a" * 40 + "\tHEAD"
+        return ""
+
+    monkeypatch.setattr(module, "_git", git)
+    module.configure_checkout({})
+    assert ("checkout", "-B", "trunk", "origin/trunk") in calls
