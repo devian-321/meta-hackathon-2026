@@ -1,4 +1,4 @@
-# GitLab live integration — October 26, 2026
+# GitLab live integration — October 27, 2026
 
 This records observed facts, not a claim of completed recovery.
 
@@ -25,41 +25,55 @@ personal identity and sign-off. No assistant authorship or signing key was used.
 | [2989799426](https://gitlab.com/student-group4903843/fault-cli/-/pipelines/2989799426) | Fault branch, `17e25fa` | Failed | Authorized MR pipeline list |
 | [2989799479](https://gitlab.com/student-group4903843/fault-cli/-/pipelines/2989799479) | MR head, `17e25fa` | Failed | Authorized MR head/list |
 
-**The hosted baseline is not green.** Its failure cause has not been established. We
-cannot attribute the hosted fault-pipeline failure to the pricing assertions until actual
-job/test evidence is available. The MR head reports `yaml_errors: null`, but that does not
-prove the jobs ran or that the entire runner/account configuration is valid.
+**The hosted baseline is not green.** The baseline jobs API returns an empty list.
+CI lint with a dry-run of main returns HTTP 200, `valid: false`, and the exact error:
+`Identity verification is required in order to run CI jobs`. No job has run, so these
+failures are not evidence of the injected pricing regression.
 
-## Access that works and access denied by GitLab
+## Replacement-token access and account blocker
 
-- Git fetch and push: succeeded using the owner-provided token.
-- Repository tree, commit and merge-request reads: HTTP 200.
-- Project metadata: HTTP 403, requires **Project: Read**.
-- Pipeline details/test reports: HTTP 403, requires **Pipeline: Read**.
-- Job details/logs: HTTP 403, requires **Job: Read**.
-- Optional CI lint request: HTTP 403, requires **CI Config: Validate**.
-- Public visibility update: HTTP 403, requires **Project: Update**; no setting was changed.
-- Anonymous project metadata: HTTP 404. Public judge access is not established.
+The replacement owner credential successfully reads project metadata, pipeline details
+and jobs, and validates CI configuration. Project updates reach GitLab validation rather
+than the earlier permission denial. Another token is not currently required.
 
-These are server-reported fine-grained permission restrictions. The credential is stored
-only in ignored `.local/gitlab/token` with mode 0600; it is not in source, history,
-remote URLs or a shared credential store. The checkout and its settings are confined to
+GitLab’s official Duo CLI 9.32.1 authenticates the owner and identifies this project, but
+reports HTTP 403: `Identity verification is required to use GitLab Duo Agent Platform`.
+No native agent session, diagnosis or repair has executed. Feature flags being enabled
+are not evidence of account eligibility, credits or successful execution.
+
+The owner must complete GitLab account verification through the pipeline’s **Verify my
+account** action. Once complete, repeat CI simulation and start a fresh baseline pipeline.
+See [GitLab’s official explanation](https://docs.gitlab.com/ci/debugging/#error-identity-verification-is-required-in-order-to-run-ci-jobs).
+
+## Public visibility blocker
+
+The project is private. Updating it to public returns HTTP 400:
+`public is not allowed in a private namespace.` The top-level parent group is private
+and also contains an unrelated private project. No parent visibility change was made.
+Explicit owner approval is pending to publish the parent group and FaultLine while
+keeping the other project private. Anonymous judge access is not yet established.
+
+## Workspace boundaries
+
+The credential stays in ignored `.local/gitlab/token`, mode 0600. It is absent from
+source, history and remote URLs. The checkout and Git settings stay in
 `.workspaces/fault-cli/`. Global Git, SSH and keychain configuration were not changed.
 
-## Next required evidence/actions
+The official Darwin ARM64 Duo binary was downloaded into ignored `.local/gitlab/bin/`,
+with its published package SHA256 verified before execution. Its configuration, storage,
+cache, bundled executable extraction and temporary paths were redirected into ignored
+`.local/gitlab/duo-runtime/`. The global installer was not run. No agent was allowed to
+modify source files. Docker’s daemon is unavailable; no runner or global service was installed.
 
-1. Read the baseline pipeline's actual error banner and job results. Add the missing read
-   permissions using project-scoped fine-grained grants, or supply a legacy token with
-   `read_api` and `write_repository` through the existing hidden setup prompt.
-2. Fix any genuine baseline setup problem and observe green CI before recording a recovery.
-   If no jobs run because the account/runner needs activation, complete that prerequisite;
-   do not classify it as the injected pricing bug.
-3. Establish public project/source/CI access for judges.
-4. Confirm the native **Fix pipeline with Duo** action is available on MR !1. No native
-   session or AI-generated repair has been observed yet. The flow is invoked in GitLab UI.
-5. Review the native proposal, record human approval, observe actual green rerun, and run
-   the independent verifier with `--check-repair` on the observed pipeline IDs/repair SHA.
-6. Record the final functioning workflow and submit the video/repository/Devpost materials.
+## Remaining delivery sequence
 
-No recovery percentage, hosted test count, Duo success, approval or final submission is
-claimed from these observations.
+1. Owner completes account identity verification; assistant observes a fresh green baseline.
+2. Run the controlled fault and establish its three actual hosted assertion failures.
+3. Execute native Duo, review its proposal, record human approval, and observe a green rerun.
+4. Run the independent verifier with `--check-repair` using real pipeline IDs and repair SHA.
+5. Establish public repository and CI access after the namespace decision.
+6. Record the functioning workflow and complete the video and Devpost submission.
+
+The local rehearsal and false-green guard work. Native recovery, hosted test evidence,
+public judge access, the final video and submission receipt remain pending. No recovery
+percentage, Duo success or human approval is claimed without observed evidence.

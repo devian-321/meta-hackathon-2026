@@ -16,7 +16,8 @@ unchanged. The canonical GitLab submission will use the contributor-provisioned 
 - [Original owner handoff](CODEX_HANDOFF_FAULTLINE.md)
 
 The tested baseline and controlled fault are pushed to the GitLab project, with a draft MR.
-Hosted pipelines exist but report failure, including the baseline; job-level diagnosis is
-pending CI read access. The local rehearsal and false-green guard work. Native Duo recovery,
+Hosted pipelines stop before creating jobs because GitLab requires account identity
+verification. The replacement token permits CI evidence reads. Native Duo also reports
+that identity verification is required. The local rehearsal and false-green guard work. Native Duo recovery,
 a published demo and a video remain pending. Lexsi implementation
 follows the GitLab sprint; Meta remains conditional on acceptance and final rules.

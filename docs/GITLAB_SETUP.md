@@ -2,10 +2,22 @@
 
 Target: `https://gitlab.com/student-group4903843/fault-cli`.
 Authenticated Git access is working. The application and draft fault MR have been pushed.
-The supplied fine-grained token permits Git/repository/MR operations but denies project
-metadata, pipeline and job reads. See [the live status](GITLAB_LIVE_STATUS.md).
+The replacement token permits project, pipeline and job reads, CI linting, and project
+updates. GitLab now explicitly requires account identity verification for both CI jobs
+and Duo Agent Platform. See [the live status](GITLAB_LIVE_STATUS.md).
 
-## One-time owner action
+## Account verification required now
+
+Open the [baseline pipeline](https://gitlab.com/student-group4903843/fault-cli/-/pipelines/2989734790),
+choose **Verify my account**, and complete GitLab’s requested steps while signed in.
+Do not send verification codes or payment information to the assistant. After verification,
+create a fresh baseline pipeline; existing zero-job failures cannot establish test results.
+[Official troubleshooting](https://docs.gitlab.com/ci/debugging/#error-identity-verification-is-required-in-order-to-run-ci-jobs).
+
+The private parent group also contains another project. Publishing the group requires
+the owner’s explicit approval; publishing only FaultLine is currently rejected by GitLab.
+
+## Credential setup reference
 
 For a legacy token, explicitly choose **Generate token → Legacy token**, then select
 **read_api** and **write_repository**. These cover evidence reads and Git pushes; API writes are
