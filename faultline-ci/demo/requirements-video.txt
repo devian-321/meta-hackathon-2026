@@ -1,0 +1,2 @@
+# Optional presentation tooling; not an application or CI dependency.
+Pillow==11.3.0

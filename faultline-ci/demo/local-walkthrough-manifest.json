@@ -1,0 +1,9 @@
+{
+  "source": "local_evidence_panels",
+  "duo_provenance": "not_run",
+  "repair_method": "scripted_fixture_restoration",
+  "evidence_sha256": "da6be3821eadcd3719a4a68b8b8fa1b03455a0c2ade098e79bf3002c4b273e96",
+  "estimated_seconds": 99.315,
+  "narration": "macOS Samantha synthetic voice",
+  "video_sha256": "9e3e68384d0199818d53de23de8b65bdd1600b3459ba94b4fc7915f0c5c71716"
+}

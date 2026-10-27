@@ -13,6 +13,8 @@ unchanged. The canonical GitLab submission will use the contributor-provisioned 
 - [Review findings and corrections](docs/REVIEW_2026-10-23.md)
 - [Submission evidence ledger](faultline-ci/docs/submission-notes.md)
 - [Demo recording script](faultline-ci/demo/script.md)
+- [Submission checklist and remaining owner actions](faultline-ci/docs/submission-checklist.md)
+- [Copy-ready Devpost description](faultline-ci/docs/devpost-submission.md)
 - [Original owner handoff](CODEX_HANDOFF_FAULTLINE.md)
 
 The tested baseline and controlled fault are pushed to the GitLab project, with a draft MR.

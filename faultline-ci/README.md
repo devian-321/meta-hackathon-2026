@@ -52,6 +52,12 @@ files and a cloneable `demo.bundle` preserving the actual local history. Existin
 directories are never overwritten; use another output name for the next run.
 The local demo requires Git and your configured Git name/email; no remote or token is used.
 
+A fresh [checked-in evidence report](demo/evidence/local-rehearsal-2026-10-27/recovery.md),
+[HTML view](demo/evidence/local-rehearsal-2026-10-27/recovery.html) and
+[walkthrough transcript](demo/local-walkthrough-transcript.txt) are available for review.
+Download the HTML file to view it locally. The 99-second narrated walkthrough describes
+this measured local evidence; it does not show a native Duo session.
+
 ## Reproduce the fault locally
 
 Choose a new temporary path outside this checkout:
@@ -103,6 +109,10 @@ the submission in ignored workspace storage. Public visibility and native Duo av
 must be checked in the real project before submission.
 Follow [the GitLab runbook](docs/gitlab-runbook.md), [implementation plan](docs/implementation-plan.md),
 [current evidence ledger](docs/submission-notes.md) and [demo script](demo/script.md).
+The [submission checklist](docs/submission-checklist.md) and
+[Devpost description](docs/devpost-submission.md) distinguish delivered behavior from
+the live integration still blocked by GitLab account verification. A fresh, inspectable
+[local evidence bundle](demo/evidence/local-rehearsal-2026-10-27/recovery.md) is included.
 
 The implementation is MIT licensed; retain upstream dependency licenses. No employer code
 or credentials are needed.

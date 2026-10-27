@@ -1,0 +1,296 @@
+{
+  "schema_version": 1,
+  "source": "local_subprocess",
+  "observed_at": "2026-10-27T10:06:53.930901+00:00",
+  "scenario_id": "pricing-discount-sign-v1",
+  "verification_scope": "local_scripted_rehearsal",
+  "verification": {
+    "passed": true,
+    "reasons": []
+  },
+  "duo_provenance": "not_run",
+  "approval": "not_demonstrated",
+  "repair_method": "scripted_fixture_restoration",
+  "local_runs": [
+    {
+      "stage": "Healthy baseline",
+      "commit_sha": "e6e74fe645a26145e3b1d170c833962768bbac9c",
+      "exit_code": 0,
+      "tests": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 0.1944
+    },
+    {
+      "stage": "Injected fault",
+      "commit_sha": "cece36330b1d5579b062caa03cecd817060f581d",
+      "exit_code": 1,
+      "tests": 8,
+      "failed": 3,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 0.2152
+    },
+    {
+      "stage": "Scripted fixture restoration",
+      "commit_sha": "5743bdc699670004b9241f0e8ccb55a103a57cf9",
+      "exit_code": 0,
+      "tests": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 0.1886
+    },
+    {
+      "stage": "Tampered assertions (false green)",
+      "commit_sha": "973602d2ab5a4a7832df4c5741a44a73a3caa6b2",
+      "exit_code": 0,
+      "tests": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 0.1887
+    }
+  ],
+  "repair_evidence": {
+    "before_sha": "cece36330b1d5579b062caa03cecd817060f581d",
+    "after_sha": "5743bdc699670004b9241f0e8ccb55a103a57cf9",
+    "merge_base_sha": "cece36330b1d5579b062caa03cecd817060f581d",
+    "before_tree": [
+      {
+        "path": ".gitignore",
+        "object_id": "24f20ef74f5e00affad02aca3d32fb05908a5ee7",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": ".gitlab-ci.yml",
+        "object_id": "e397f35315e3299665e793a9569ac36b23c9a4e7",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "pyproject.toml",
+        "object_id": "c3f023147dda83d344674537440180cc55fa5fd6",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "sample_app",
+        "object_id": "b26a0efa92dd6fcafbcbcf4ba8c96a63575e812e",
+        "mode": "040000",
+        "kind": "tree"
+      },
+      {
+        "path": "sample_app/__init__.py",
+        "object_id": "2f396e90c1e168786ba1e99de6f4e3fefd91de10",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "sample_app/pricing.py",
+        "object_id": "da3bccbff5e078752f14b61b4be548724335cf90",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "tests",
+        "object_id": "0027d0f52d2cad141d4a916d88846e1c1bc66b52",
+        "mode": "040000",
+        "kind": "tree"
+      },
+      {
+        "path": "tests/test_sample_app.py",
+        "object_id": "a70a7543784d09bb72a2fce15148afbc3a8da9a3",
+        "mode": "100644",
+        "kind": "blob"
+      }
+    ],
+    "after_tree": [
+      {
+        "path": ".gitignore",
+        "object_id": "24f20ef74f5e00affad02aca3d32fb05908a5ee7",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": ".gitlab-ci.yml",
+        "object_id": "e397f35315e3299665e793a9569ac36b23c9a4e7",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "pyproject.toml",
+        "object_id": "c3f023147dda83d344674537440180cc55fa5fd6",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "sample_app",
+        "object_id": "a62c3f62d764cc8cb319924a5d51e15a0598ecdc",
+        "mode": "040000",
+        "kind": "tree"
+      },
+      {
+        "path": "sample_app/__init__.py",
+        "object_id": "2f396e90c1e168786ba1e99de6f4e3fefd91de10",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "sample_app/pricing.py",
+        "object_id": "35ecfae94590e21d620a1b15b5f3bb86f2e602d1",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "tests",
+        "object_id": "0027d0f52d2cad141d4a916d88846e1c1bc66b52",
+        "mode": "040000",
+        "kind": "tree"
+      },
+      {
+        "path": "tests/test_sample_app.py",
+        "object_id": "a70a7543784d09bb72a2fce15148afbc3a8da9a3",
+        "mode": "100644",
+        "kind": "blob"
+      }
+    ],
+    "before_content_sha256": "f8d71a0e1e960f0f36699154113274c27a69b76ff4b88caa6b5f0956634afb73",
+    "after_content_sha256": "433a218a278d1454da443b423bb7e4da1a13e6ea7ee0e43851bdd415f7072a78"
+  },
+  "repair_verification": {
+    "passed": true,
+    "ancestry_passed": true,
+    "scope_passed": true,
+    "scenario_passed": true,
+    "changed_paths": [
+      "sample_app",
+      "sample_app/pricing.py"
+    ],
+    "reasons": []
+  },
+  "tampered_evidence": {
+    "before_sha": "cece36330b1d5579b062caa03cecd817060f581d",
+    "after_sha": "973602d2ab5a4a7832df4c5741a44a73a3caa6b2",
+    "merge_base_sha": "cece36330b1d5579b062caa03cecd817060f581d",
+    "before_tree": [
+      {
+        "path": ".gitignore",
+        "object_id": "24f20ef74f5e00affad02aca3d32fb05908a5ee7",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": ".gitlab-ci.yml",
+        "object_id": "e397f35315e3299665e793a9569ac36b23c9a4e7",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "pyproject.toml",
+        "object_id": "c3f023147dda83d344674537440180cc55fa5fd6",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "sample_app",
+        "object_id": "b26a0efa92dd6fcafbcbcf4ba8c96a63575e812e",
+        "mode": "040000",
+        "kind": "tree"
+      },
+      {
+        "path": "sample_app/__init__.py",
+        "object_id": "2f396e90c1e168786ba1e99de6f4e3fefd91de10",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "sample_app/pricing.py",
+        "object_id": "da3bccbff5e078752f14b61b4be548724335cf90",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "tests",
+        "object_id": "0027d0f52d2cad141d4a916d88846e1c1bc66b52",
+        "mode": "040000",
+        "kind": "tree"
+      },
+      {
+        "path": "tests/test_sample_app.py",
+        "object_id": "a70a7543784d09bb72a2fce15148afbc3a8da9a3",
+        "mode": "100644",
+        "kind": "blob"
+      }
+    ],
+    "after_tree": [
+      {
+        "path": ".gitignore",
+        "object_id": "24f20ef74f5e00affad02aca3d32fb05908a5ee7",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": ".gitlab-ci.yml",
+        "object_id": "e397f35315e3299665e793a9569ac36b23c9a4e7",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "pyproject.toml",
+        "object_id": "c3f023147dda83d344674537440180cc55fa5fd6",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "sample_app",
+        "object_id": "b26a0efa92dd6fcafbcbcf4ba8c96a63575e812e",
+        "mode": "040000",
+        "kind": "tree"
+      },
+      {
+        "path": "sample_app/__init__.py",
+        "object_id": "2f396e90c1e168786ba1e99de6f4e3fefd91de10",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "sample_app/pricing.py",
+        "object_id": "da3bccbff5e078752f14b61b4be548724335cf90",
+        "mode": "100644",
+        "kind": "blob"
+      },
+      {
+        "path": "tests",
+        "object_id": "9bd110742e4d14e9bedfd9f69effdf7711ba8487",
+        "mode": "040000",
+        "kind": "tree"
+      },
+      {
+        "path": "tests/test_sample_app.py",
+        "object_id": "ee929802b6e4e13450ae24190a38dc42f8ceaeaf",
+        "mode": "100644",
+        "kind": "blob"
+      }
+    ],
+    "before_content_sha256": "f8d71a0e1e960f0f36699154113274c27a69b76ff4b88caa6b5f0956634afb73",
+    "after_content_sha256": "f8d71a0e1e960f0f36699154113274c27a69b76ff4b88caa6b5f0956634afb73"
+  },
+  "tampered_verification": {
+    "passed": false,
+    "ancestry_passed": true,
+    "scope_passed": false,
+    "scenario_passed": false,
+    "changed_paths": [
+      "tests",
+      "tests/test_sample_app.py"
+    ],
+    "reasons": [
+      "Repair changes files or metadata outside the allowed pricing correction",
+      "Code does not match the pinned fault and known-good pricing fixtures"
+    ]
+  },
+  "git_bundle_sha256": "cf0d5f385af7c356300726666b4b77774345c51d04ae7aacd2d2ced76fda3bff"
+}

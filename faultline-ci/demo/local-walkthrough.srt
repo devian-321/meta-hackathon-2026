@@ -1,0 +1,107 @@
+1
+00:00:00,000 --> 00:00:04,231
+A green pipeline does not always mean the original problem was fixed
+
+2
+00:00:04,231 --> 00:00:07,528
+FaultLine C I checks the repair as well as the result
+
+3
+00:00:07,528 --> 00:00:11,510
+This is a local evidence walkthrough with real Git and test runs
+
+4
+00:00:11,510 --> 00:00:13,999
+The repair is scripted; Duo has not run.
+
+5
+00:00:13,999 --> 00:00:16,254
+First, establish a healthy baseline
+
+6
+00:00:16,254 --> 00:00:20,957
+The sample invoice calculator uses integer cents and percentage discounts
+
+7
+00:00:20,957 --> 00:00:22,697
+All eight sample tests pass
+
+8
+00:00:22,697 --> 00:00:27,980
+This exact local commit and the test results are preserved in the evidence bundle.
+
+9
+00:00:27,980 --> 00:00:30,551
+Next, inject a one character regression
+
+10
+00:00:30,551 --> 00:00:33,387
+The discount is added instead of subtracted
+
+11
+00:00:33,387 --> 00:00:37,277
+Three pricing assertions now fail and five tests still pass
+
+12
+00:00:37,277 --> 00:00:41,827
+These are measured local results, not hosted GitLab pipeline results.
+
+13
+00:00:41,827 --> 00:00:44,064
+A scripted restoration fixes the sign
+
+14
+00:00:44,064 --> 00:00:45,637
+All eight tests pass again
+
+15
+00:00:45,637 --> 00:00:53,801
+The independent guard accepts the correction after checking commit ancestry, allowed change scope and the pinned pricing implementation
+
+16
+00:00:53,801 --> 00:00:56,220
+This does not demonstrate an A I repair.
+
+17
+00:00:56,220 --> 00:00:57,566
+Now the counterexample
+
+18
+00:00:57,566 --> 00:01:00,685
+A different attempt disables the pricing assertions
+
+19
+00:01:00,685 --> 00:01:07,413
+The tests report green, but the guard rejects the change: the tests were altered and the pricing fault remains
+
+20
+00:01:07,413 --> 00:01:10,961
+This is why checking only pipeline status is insufficient.
+
+21
+00:01:10,961 --> 00:01:16,115
+The repository includes the full reports, four J Unit files and a cloneable Git bundle
+
+22
+00:01:16,115 --> 00:01:20,010
+Reviewers can inspect the exact commits and reproduce the command
+
+23
+00:01:20,010 --> 00:01:23,605
+The local history is separate from the hosted merge request.
+
+24
+00:01:23,605 --> 00:01:27,444
+The GitLab adapter and native repair instructions are implemented
+
+25
+00:01:27,444 --> 00:01:31,106
+Account verification currently blocks both hosted jobs and Duo
+
+26
+00:01:31,106 --> 00:01:37,071
+The next step is a real Duo proposal, human review and a green rerun checked through the GitLab A P I
+
+27
+00:01:37,071 --> 00:01:39,315
+That live recovery remains unverified.

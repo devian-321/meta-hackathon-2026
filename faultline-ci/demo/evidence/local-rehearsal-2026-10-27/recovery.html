@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FaultLine CI · Local recovery rehearsal</title>
+<style>
+:root{color-scheme:light;
+font:16px/1.6 system-ui,sans-serif;
+color:#182338;
+background:#eef2f6}
+*{box-sizing:border-box}body{margin:0}main{max-width:1120px;
+margin:auto;
+padding:40px 24px}
+header{background:#111d31;
+color:#fff;
+padding:32px;
+border-radius:20px}h1{font-size:clamp(30px,5vw,46px);
+line-height:1.15;
+margin:12px 0}
+.eyebrow{letter-spacing:.16em;
+text-transform:uppercase;
+font-size:12px;
+color:#91bdff}
+.notice{background:#fff1cd;
+border-left:5px solid #ac6b00;
+padding:16px 20px;
+margin:24px 0;
+border-radius:8px}
+.cards{display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:16px;
+margin:24px 0}
+.card,section{background:#fff;
+padding:24px;
+border:1px solid #d5dee8;
+border-radius:14px}
+.card strong{display:block;
+font-size:22px;
+margin:8px 0}.label{font-size:13px;
+color:#53657d}
+.ok{color:#146242}.pending{color:#855000}section{margin:20px 0}h2{font-size:20px;
+margin-top:0}
+.table-wrap{overflow-x:auto}table{width:100%;
+border-collapse:collapse;
+text-align:left;
+font-size:14px}
+th,td{padding:14px 12px;
+border-bottom:1px solid #e3e9f0}th{color:#53657d}
+pre{white-space:pre-wrap;
+overflow-wrap:anywhere;
+font:13px/1.7 ui-monospace,monospace}
+nav{display:flex;
+gap:12px;
+flex-wrap:wrap}a{padding:10px 16px;
+color:#164e9b;
+background:#eaf2ff;
+border-radius:8px;
+text-decoration:none}
+footer{font-size:13px;
+color:#53657d;
+margin-top:24px}details summary{cursor:pointer;
+font-weight:600}
+</style>
+</head>
+<body>
+<main>
+<header>
+<span class="eyebrow">FaultLine CI · reproducible recovery evidence</span>
+<h1>Local recovery rehearsal</h1>
+<p>Observe the failure. Inspect the correction. Check the work.</p>
+</header>
+<p class="notice">Scripted local repair. GitLab Duo and hosted pipelines were not run.</p>
+<div class="cards">
+<div class="card">
+<span class="label">Requested checks</span>
+<strong>PASS</strong>
+</div>
+<div class="card">
+<span class="label">Repository repair guard</span>
+<strong>PASS</strong>
+</div>
+<div class="card"><span class="label">False-green attempt</span><strong>REJECTED</strong></div>
+<div class="card">
+<span class="label">Native Duo execution</span>
+<strong class="pending">Not verified</strong>
+</div>
+</div>
+<section>
+<h2>Observed execution</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Execution stage</th><th>Passing tests</th><th>Failing tests</th><th>Commit</th></tr>
+</thead>
+<tbody><tr><td>Healthy baseline</td><td>8</td><td>0</td><td>e6e74fe645a2</td></tr><tr><td>Injected fault</td><td>5</td><td>3</td><td>cece36330b1d</td></tr><tr><td>Scripted fixture restoration</td><td>8</td><td>0</td><td>5743bdc69967</td></tr><tr><td>Tampered assertions (false green)</td><td>8</td><td>0</td><td>973602d2ab5a</td></tr></tbody>
+</table>
+</div>
+</section>
+<section>
+<h2>Evidence bundle</h2>
+<nav><a href="recovery.json">JSON evidence</a><a href="recovery.md">Markdown report</a><a href="demo.bundle">Git proof bundle</a></nav>
+<p>Check the source and scope before interpreting a PASS.</p>
+<details>
+<summary>Read the full report</summary>
+<pre># FaultLine CI — local rehearsal
+
+**Real local Git commits and pytest runs. Scripted repair; GitLab Duo was not run.**
+
+| Stage | Passed tests | Failed tests | Commit |
+| --- | --- | --- | --- |
+| Healthy baseline | 8 | 0 | `e6e74fe645a26145e3b1d170c833962768bbac9c` |
+| Injected fault | 5 | 3 | `cece36330b1d5579b062caa03cecd817060f581d` |
+| Scripted fixture restoration | 8 | 0 | `5743bdc699670004b9241f0e8ccb55a103a57cf9` |
+| Tampered assertions (false green) | 8 | 0 | `973602d2ab5a4a7832df4c5741a44a73a3caa6b2` |
+
+Repository guard accepts the exact repair and rejects the tampered tests.
+
+Commit ancestry and code scope were checked against real local Git objects. The bundled Git history preserves the proof. Native Duo, hosted pipelines, and human approval remain pending.
+
+Measured durations cover local pytest subprocesses only.
+</pre>
+</details>
+</section>
+<footer>No agent's self-description is treated as proof.
+This report does not establish production readiness.</footer>
+</main>
+</body>
+</html>

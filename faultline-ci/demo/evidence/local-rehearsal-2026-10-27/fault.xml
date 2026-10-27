@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="8" time="0.039" timestamp="2026-10-27T15:36:53.102565+05:30" hostname="apples-MacBook-Pro.local"><testcase classname="tests.test_sample_app" name="test_invoice_total[1000-2-0-2000]" time="0.000" /><testcase classname="tests.test_sample_app" name="test_invoice_total[1000-2-10-1800]" time="0.000"><failure message="assert 2200 == 1800&#10; +  where 2200 = total_cents(1000, 2, 10)">price = 1000, quantity = 2, discount = 10, expected = 1800
+
+    @pytest.mark.parametrize(
+        ("price", "quantity", "discount", "expected"),
+        [(1000, 2, 0, 2000), (1000, 2, 10, 1800), (999, 1, 15, 849), (500, 3, 100, 0)],
+    )
+    def test_invoice_total(price: int, quantity: int, discount: int, expected: int) -&gt; None:
+&gt;       assert total_cents(price, quantity, discount) == expected
+E       assert 2200 == 1800
+E        +  where 2200 = total_cents(1000, 2, 10)
+
+tests/test_sample_app.py:11: AssertionError</failure></testcase><testcase classname="tests.test_sample_app" name="test_invoice_total[999-1-15-849]" time="0.000"><failure message="assert 1148 == 849&#10; +  where 1148 = total_cents(999, 1, 15)">price = 999, quantity = 1, discount = 15, expected = 849
+
+    @pytest.mark.parametrize(
+        ("price", "quantity", "discount", "expected"),
+        [(1000, 2, 0, 2000), (1000, 2, 10, 1800), (999, 1, 15, 849), (500, 3, 100, 0)],
+    )
+    def test_invoice_total(price: int, quantity: int, discount: int, expected: int) -&gt; None:
+&gt;       assert total_cents(price, quantity, discount) == expected
+E       assert 1148 == 849
+E        +  where 1148 = total_cents(999, 1, 15)
+
+tests/test_sample_app.py:11: AssertionError</failure></testcase><testcase classname="tests.test_sample_app" name="test_invoice_total[500-3-100-0]" time="0.000"><failure message="assert 3000 == 0&#10; +  where 3000 = total_cents(500, 3, 100)">price = 500, quantity = 3, discount = 100, expected = 0
+
+    @pytest.mark.parametrize(
+        ("price", "quantity", "discount", "expected"),
+        [(1000, 2, 0, 2000), (1000, 2, 10, 1800), (999, 1, 15, 849), (500, 3, 100, 0)],
+    )
+    def test_invoice_total(price: int, quantity: int, discount: int, expected: int) -&gt; None:
+&gt;       assert total_cents(price, quantity, discount) == expected
+E       assert 3000 == 0
+E        +  where 3000 = total_cents(500, 3, 100)
+
+tests/test_sample_app.py:11: AssertionError</failure></testcase><testcase classname="tests.test_sample_app" name="test_invalid_invoice[-1-1-0]" time="0.000" /><testcase classname="tests.test_sample_app" name="test_invalid_invoice[10-0-0]" time="0.000" /><testcase classname="tests.test_sample_app" name="test_invalid_invoice[10-1--1]" time="0.000" /><testcase classname="tests.test_sample_app" name="test_invalid_invoice[10-1-101]" time="0.000" /></testsuite></testsuites>

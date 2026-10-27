@@ -1,0 +1,20 @@
+1. Check the repair, not just the green
+A green pipeline does not always mean the original problem was fixed. FaultLine C I checks the repair as well as the result. This is a local evidence walkthrough with real Git and test runs. The repair is scripted; Duo has not run.
+
+2. 1. Establish a healthy baseline
+First, establish a healthy baseline. The sample invoice calculator uses integer cents and percentage discounts. All eight sample tests pass. This exact local commit and the test results are preserved in the evidence bundle.
+
+3. 2. Inject the discount regression
+Next, inject a one character regression. The discount is added instead of subtracted. Three pricing assertions now fail and five tests still pass. These are measured local results, not hosted GitLab pipeline results.
+
+4. 3. Accept the narrow correction
+A scripted restoration fixes the sign. All eight tests pass again. The independent guard accepts the correction after checking commit ancestry, allowed change scope and the pinned pricing implementation. This does not demonstrate an A I repair.
+
+5. 4. Reject a dishonest green
+Now the counterexample. A different attempt disables the pricing assertions. The tests report green, but the guard rejects the change: the tests were altered and the pricing fault remains. This is why checking only pipeline status is insufficient.
+
+6. Inspect the underlying evidence
+The repository includes the full reports, four J Unit files and a cloneable Git bundle. Reviewers can inspect the exact commits and reproduce the command. The local history is separate from the hosted merge request.
+
+7. Next: demonstrate native recovery
+The GitLab adapter and native repair instructions are implemented. Account verification currently blocks both hosted jobs and Duo. The next step is a real Duo proposal, human review and a green rerun checked through the GitLab A P I. That live recovery remains unverified.
